@@ -1,0 +1,10 @@
+###
+GET http://localhost:7070/api/msg/hello
+
+###
+POST http://localhost:7070/api/auth/register
+
+{
+"username": "fromRest2",
+"password": "pass123"
+}

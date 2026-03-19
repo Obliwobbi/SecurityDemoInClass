@@ -15,6 +15,7 @@ public class Main {
 //                .route(securityRoutes.getRouteResource("protected"))
 //                .route(restRoutes.getRouteResource("open/person"))
                 .route(routes.getRouteResource("msg"))
+                .route(routes.getRouteResource("auth"))
 //                .route(() -> {
 //                    path("/index", () -> {
 //                        get("/", ctx -> ctx.render("index.html"));

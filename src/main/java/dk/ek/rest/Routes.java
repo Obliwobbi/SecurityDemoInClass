@@ -23,6 +23,7 @@ public class Routes {
     private final EmployeeDAO employeeDAO = new EmployeeDAO(HibernateConfig.getEntityManagerFactory());
     private final DepartmentDAO departmentDAO = new DepartmentDAO(HibernateConfig.getEntityManagerFactory());
     ObjectMapper objectMapper = new ObjectMapper();
+    private final ISecurityController securityController = new SecurityController();
 
     public EndpointGroup getRouteResource(String resourceName) {
         return switch (resourceName.toLowerCase()) {
@@ -32,20 +33,11 @@ public class Routes {
                 get("hello", ctx -> ctx.json(on));
                 post("echo", ctx -> ctx.result(ctx.body()));
             });
-//            case "employee", "person" -> () -> path("employees", () -> {
-//                get(this::getAllEmployees);
-//                get("{id}", this::getEmployeeById);
-//                post(this::createEmployee);
-//                put("{id}", this::updateEmployee);
-//                delete("{id}", this::deleteEmployee);
-//            });
-//            case "department" -> () -> path("departments", () -> {
-//                get(this::getAllDepartments);
-//                get("{id}", this::getDepartmentById);
-//                post(this::createDepartment);
-//                put("{id}", this::updateDepartment);
-//                delete("{id}", this::deleteDepartment);
-//            });
+//
+            case "auth" -> () -> path("auth", () -> {
+                post("register", securityController::register );
+                post("login", (ctx)->{} );
+            });
             default -> throw new IllegalArgumentException("Unknown resource name: " + resourceName);
         };
     }
