@@ -134,11 +134,11 @@ public class ApplicationConfig {
         config.bundledPlugins.enableDevLogging();
 //        config.bundledPlugins.enableRouteOverview("/routes", Role.ANYONE);
 
-        config.staticFiles.add(files -> {
-            files.hostedPath = "/";
-            files.directory = "/public";
-            files.location = Location.CLASSPATH;
-        });
+//        config.staticFiles.add(files -> {
+//            files.hostedPath = "/";
+//            files.directory = "/public";
+//            files.location = Location.CLASSPATH;
+//        });
 
         config.events.serverStarted(() ->
                 System.out.println("Javalin started on http://localhost:7070/api")

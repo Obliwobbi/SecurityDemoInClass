@@ -1,5 +1,7 @@
 package dk.ek.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dk.ek.exceptions.ApiException;
 import dk.ek.persistence.Department;
 import dk.ek.persistence.DepartmentDAO;
@@ -15,17 +17,20 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 import static io.javalin.apibuilder.ApiBuilder.put;
-
+import com.fasterxml.jackson.core.*;
 public class Routes {
 
     private final EmployeeDAO employeeDAO = new EmployeeDAO(HibernateConfig.getEntityManagerFactory());
     private final DepartmentDAO departmentDAO = new DepartmentDAO(HibernateConfig.getEntityManagerFactory());
+    ObjectMapper objectMapper = new ObjectMapper();
 
     public EndpointGroup getRouteResource(String resourceName) {
         return switch (resourceName.toLowerCase()) {
             case "msg" -> () -> path("msg", () -> {
-                        get("hello", ctx -> ctx.result("Hello World!"));
-                        post("echo", ctx -> ctx.result(ctx.body()));
+            ObjectNode on = objectMapper.createObjectNode();
+            on.put("msg", "Hello World");
+                get("hello", ctx -> ctx.json(on));
+                post("echo", ctx -> ctx.result(ctx.body()));
             });
 //            case "employee", "person" -> () -> path("employees", () -> {
 //                get(this::getAllEmployees);
@@ -42,7 +47,9 @@ public class Routes {
 //                delete("{id}", this::deleteDepartment);
 //            });
             default -> throw new IllegalArgumentException("Unknown resource name: " + resourceName);
-    };
+        };
+    }
+}
 
 //    private void getAllEmployees(Context ctx) {
 //        ctx.json(employeeDAO.get());
@@ -130,4 +137,4 @@ public class Routes {
 //
 //    private record DeleteResponse(Long id) {
 //    }
-}
+//}
