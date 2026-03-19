@@ -10,6 +10,7 @@ import dk.ek.persistence.EmployeeDAO;
 import dk.ek.persistence.HibernateConfig;
 import io.javalin.apibuilder.EndpointGroup;
 import io.javalin.http.Context;
+import io.javalin.security.RouteRole;
 import jakarta.persistence.EntityNotFoundException;
 
 import static io.javalin.apibuilder.ApiBuilder.delete;
@@ -35,98 +36,19 @@ public class Routes {
             });
 //
             case "auth" -> () -> path("auth", () -> {
+                ObjectNode on = objectMapper.createObjectNode();
+                on.put("msg", "Hello World from protected user route");
                 post("register", securityController::register );
                 post("login", securityController::login);
+                get("protected", ctx->ctx.json(on).status(200), Role.USER);
             });
             default -> throw new IllegalArgumentException("Unknown resource name: " + resourceName);
         };
     }
+    public enum Role implements RouteRole {
+        ANYONE, USER, ADMIN
+    }
+
 }
 
-//    private void getAllEmployees(Context ctx) {
-//        ctx.json(employeeDAO.get());
-//    }
-//
-//    private void getEmployeeById(Context ctx) {
-//        try {
-//            ctx.json(employeeDAO.getByID(getPathId(ctx)));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private void createEmployee(Context ctx) {
-//        Employee employee = ctx.bodyAsClass(Employee.class);
-//        ctx.status(201).json(employeeDAO.create(employee));
-//    }
-//
-//    private void updateEmployee(Context ctx) {
-//        Employee employee = ctx.bodyAsClass(Employee.class);
-//        employee.setId(getPathId(ctx));
-//        try {
-//            ctx.json(employeeDAO.updateWithCheck(employee));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private void deleteEmployee(Context ctx) {
-//        Employee employee = new Employee();
-//        employee.setId(getPathId(ctx));
-//        try {
-//            Long deletedId = employeeDAO.delete(employee);
-//            ctx.json(new DeleteResponse(deletedId));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private void getAllDepartments(Context ctx) {
-//        ctx.json(departmentDAO.get());
-//    }
-//
-//    private void getDepartmentById(Context ctx) {
-//        try {
-//            ctx.json(departmentDAO.getByID(getPathId(ctx)));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private void createDepartment(Context ctx) {
-//        Department department = ctx.bodyAsClass(Department.class);
-//        ctx.status(201).json(departmentDAO.create(department));
-//    }
-//
-//    private void updateDepartment(Context ctx) {
-//        Department department = ctx.bodyAsClass(Department.class);
-//        department.setId(getPathId(ctx));
-//        try {
-//            ctx.json(departmentDAO.update(department));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private void deleteDepartment(Context ctx) {
-//        Department department = new Department();
-//        department.setId(getPathId(ctx));
-//        try {
-//            Long deletedId = departmentDAO.delete(department);
-//            ctx.json(new DeleteResponse(deletedId));
-//        } catch (EntityNotFoundException e) {
-//            throw new ApiException(404, e.getMessage());
-//        }
-//    }
-//
-//    private Long getPathId(Context ctx) {
-//        try {
-//            return Long.valueOf(ctx.pathParam("id"));
-//        } catch (NumberFormatException e) {
-//            throw new ApiException(400, "Path parameter 'id' must be a number");
-//        }
-//    }
-//
-//    private record DeleteResponse(Long id) {
-//    }
-//}
+

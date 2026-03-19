@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Routes routes = new Routes();
         new ApplicationConfig()
-//                .security()
+                .security()
 //                .route(securityRoutes.getRouteResource("auth"))
 //                .route(securityRoutes.getRouteResource("protected"))
 //                .route(restRoutes.getRouteResource("open/person"))

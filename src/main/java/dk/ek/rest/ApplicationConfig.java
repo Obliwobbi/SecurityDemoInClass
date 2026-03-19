@@ -23,7 +23,7 @@ public class ApplicationConfig {
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
-//    private final ISecurityController securityController = SecurityController.getInstance();
+    private final ISecurityController securityController = new SecurityController();
 
     private final List<EndpointGroup> routes = new ArrayList<>();
     private final List<Consumer<JavalinConfig>> configSteps = new ArrayList<>();
@@ -51,13 +51,13 @@ public class ApplicationConfig {
         return this;
     }
 
-//    public ApplicationConfig security() {
-//        configSteps.add(config -> {
-//            config.routes.beforeMatched(securityController::authenticate);
-//            config.routes.beforeMatched(securityController::authorize);
-//        });
-//        return this;
-//    }
+    public ApplicationConfig security() {
+        configSteps.add(config -> {
+            config.routes.beforeMatched(securityController::authenticate);
+            config.routes.beforeMatched(securityController::authorize);
+        });
+        return this;
+    }
 
     public ApplicationConfig apiExceptions() {
         configSteps.add(config ->
